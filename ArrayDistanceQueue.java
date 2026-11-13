@@ -20,11 +20,24 @@ public class ArrayDistanceQueue implements DistanceQueue {
 
     @Override
     public void decreaseKey(int v, long k) {
+        // accès direct par l'indice du noeud, temps constant
+        if (!queued[v]) {
+            queued[v] = true;
+            size++;
+        }
+        key[v] = k;
     }
 
     @Override
     public int extractMin() {
-        return -1;
+        if (size == 0) throw new IllegalStateException("empty queue");
+        // balayage de toutes les cases pour trouver la plus petite clé
+        int min = -1;
+        for (int v = 0; v < key.length; v++)
+            if (queued[v] && (min == -1 || key[v] < key[min])) min = v;
+        queued[min] = false;
+        size--;
+        return min;
     }
 
     @Override

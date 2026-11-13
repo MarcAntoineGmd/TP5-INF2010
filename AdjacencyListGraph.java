@@ -21,20 +21,25 @@ public class AdjacencyListGraph extends Graph {
 
     @Override
     protected void addArc(int v1, int v2, int weight) {
+        neighbors.get(v1).put(v2, weight); // temps constant attendu
     }
 
     @Override
     public boolean hasEdge(int v1, int v2) {
-        return false;
+        return valid(v1) && neighbors.get(v1).containsKey(v2);
     }
 
     @Override
     public int weight(int v1, int v2) {
-        return 0;
+        Integer w = valid(v1) ? neighbors.get(v1).get(v2) : null;
+        if (w == null) throw new NoSuchElementException("no edge " + v1 + "->" + v2);
+        return w;
     }
 
     @Override
     public Collection<Integer> adj(int v) {
-        return new ArrayList<>();
+        if (!valid(v)) return Collections.emptyList();
+        // vue en lecture seule des clés, sans copie : on paie seulement le degré en itérant
+        return Collections.unmodifiableSet(neighbors.get(v).keySet());
     }
 }
