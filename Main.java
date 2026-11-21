@@ -55,8 +55,8 @@ public class Main {
     static final double GRAPH_BUDGET_MS = 1000; // aim to spend about this long timing each graph
     static final int WARMUP_ROUNDS = 200;
 
-    static final String[] NAMES = {"listArray", "listHeap", "matArray", "matHeap"};
-    static final List<IntFunction<DistanceQueue>> QUEUES = List.of(
+    static String[] NAMES = {"listArray", "listHeap", "matArray", "matHeap"};
+    static List<IntFunction<DistanceQueue>> QUEUES = List.of(
             ArrayDistanceQueue::new, BinaryHeapDistanceQueue::new,
             ArrayDistanceQueue::new, BinaryHeapDistanceQueue::new);
 
@@ -164,11 +164,16 @@ public class Main {
 
     public static void main(String[] args) {
         if (args.length < 3) {
-            System.out.println("Usage: java Main <input.tsv> <output.tsv> <graphCount> [verify]");
+            System.out.println("Usage: java Main <input.tsv> <output.tsv> <graphCount> [verify] [bonus]");
             return;
         }
         int graphCount = Integer.parseInt(args[2]);
-        boolean verify = args.length > 3 && args[3].equals("verify");
+        List<String> opts = Arrays.asList(args).subList(3, args.length);
+        boolean verify = opts.contains("verify");
+        if (opts.contains("bonus")) { // bonus : monceau remplacé par file inefficace, le reste est pas changé
+            NAMES = new String[]{"listArray", "listIneff", "matArray", "matIneff"};
+            QUEUES = List.of(ArrayDistanceQueue::new, InefficientArrayDistanceQueue::new, ArrayDistanceQueue::new, InefficientArrayDistanceQueue::new);
+        }
         Random r = new Random(SEED);
         Runtime rt = Runtime.getRuntime();
 
