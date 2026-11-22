@@ -1,5 +1,3 @@
-import java.util.LinkedList;
-
 /**
  * InefficientArrayDistanceQueue: keys and values are both stored
  * in arrays with corresponding indices.  Both decreaseKey and extractMin
@@ -31,15 +29,12 @@ public class InefficientArrayDistanceQueue implements DistanceQueue {
     }
 
     @Override
-    //À faire
     public int extractMin() {
         if (size == 0) throw new IllegalStateException("empty queue");
-        // recherche linéaire du minimum parmi les noeuds présents
         int m = 0;
         for (int i = 1; i < size; i++)
             if (queueKeys[i] < queueKeys[m]) m = i;
         int v = queueValues[m];
-        // le dernier élément bouche le trou, retrait en temps constant
         size--;
         queueValues[m] = queueValues[size];
         queueKeys[m] = queueKeys[size];
